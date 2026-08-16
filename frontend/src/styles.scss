@@ -1,0 +1,147 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css');
+@import 'leaflet/dist/leaflet.css';
+
+:root {
+  /* Variables Globales Compartidas */
+  --font-primary: 'Inter', sans-serif;
+  --transition-speed: 0.3s;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  
+  /* Brand Colors */
+  --brand-primary: #D81B60; /* Fucsia Trufi */
+  --brand-hover: #C2185B;
+  --brand-light: rgba(216, 27, 96, 0.1);
+  --brand-gradient: linear-gradient(135deg, #D81B60, #FF4081);
+
+  /* Status Colors */
+  --success: #10b981;
+  --success-bg: rgba(16, 185, 129, 0.1);
+  --warning: #f59e0b;
+  --warning-bg: rgba(245, 158, 11, 0.1);
+  --danger: #ef4444;
+  --danger-bg: rgba(239, 68, 68, 0.1);
+  --info: #3b82f6;
+  --info-bg: rgba(59, 130, 246, 0.1);
+
+  /* LIGHT THEME VARIABLES (Default) */
+  --bg-main: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-surface-hover: #f1f5f9;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --shadow-glow: 0 4px 14px 0 rgba(216, 27, 96, 0.39);
+  
+  /* Inputs & Forms */
+  --input-bg: #f8fafc;
+  --input-border: #cbd5e1;
+  --input-focus: var(--brand-primary);
+}
+
+/* DARK THEME VARIABLES */
+html[data-theme='dark'] {
+  --bg-main: #0f172a;
+  --bg-surface: #1e293b;
+  --bg-surface-hover: #334155;
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --border-color: #334155;
+  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
+  --shadow-glow: 0 4px 14px 0 rgba(216, 27, 96, 0.2);
+
+  /* Inputs & Forms */
+  --input-bg: #0f172a;
+  --input-border: #334155;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0; padding: 0;
+}
+
+html, body {
+  height: 100%;
+  font-family: var(--font-primary);
+  background-color: var(--bg-main);
+  color: var(--text-main);
+  transition: background-color var(--transition-speed) ease, color var(--transition-speed) ease;
+}
+
+/* Tipografía Compartida */
+h1, h2, h3, h4, h5, h6 { color: var(--text-main); font-weight: 600; margin-bottom: 0.5rem; }
+p { color: var(--text-muted); line-height: 1.5; margin-bottom: 1rem; }
+a { color: var(--brand-primary); text-decoration: none; transition: color var(--transition-speed); }
+a:hover { color: var(--brand-hover); }
+
+/* Componentes Comunes */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  transition: transform var(--transition-speed), box-shadow var(--transition-speed), background-color var(--transition-speed), border-color var(--transition-speed);
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem;
+  padding: 0.6rem 1.2rem; font-family: var(--font-primary);
+  font-weight: 600; font-size: 0.9rem;
+  border-radius: var(--radius-sm); border: none;
+  cursor: pointer; transition: all var(--transition-speed) ease;
+}
+.btn-primary {
+  background: var(--brand-gradient);
+  color: white;
+  box-shadow: var(--shadow-glow);
+}
+.btn-primary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(216, 27, 96, 0.5);
+}
+.btn-primary:active { transform: translateY(1px); }
+
+.btn-secondary {
+  background: var(--bg-surface-hover);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+}
+.btn-secondary:hover { background: var(--border-color); }
+
+/* Inputs Base */
+.form-control {
+  width: 100%; padding: 0.75rem 1rem;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  border-radius: var(--radius-sm);
+  color: var(--text-main);
+  font-family: var(--font-primary);
+  transition: all var(--transition-speed);
+}
+.form-control:focus {
+  outline: none;
+  border-color: var(--input-focus);
+  box-shadow: 0 0 0 3px var(--brand-light);
+}
+
+/* Utilidades Comunes */
+.badge {
+  padding: 0.25rem 0.6rem; border-radius: 20px;
+  font-size: 0.75rem; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem;
+}
+.badge.success { background: var(--success-bg); color: var(--success); }
+.badge.warning { background: var(--warning-bg); color: var(--warning); }
+.badge.danger { background: var(--danger-bg); color: var(--danger); }
+.badge.info { background: var(--info-bg); color: var(--info); }

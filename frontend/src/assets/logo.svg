@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400">
+  <defs>
+    <linearGradient id="busGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#D81B60" />
+      <stop offset="100%" stop-color="#FF4081" />
+    </linearGradient>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="8" stdDeviation="8" flood-color="#D81B60" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <!-- Background Circle (Optional, kept clean) -->
+  <circle cx="200" cy="200" r="180" fill="url(#busGrad)" />
+
+  <!-- Bus Shape -->
+  <g fill="#FFFFFF" filter="url(#shadow)">
+    <path d="M 120 100 
+             C 120 80, 280 80, 280 100 
+             L 290 260 
+             C 290 280, 110 280, 110 260 
+             Z" />
+    <!-- Wheels -->
+    <path d="M 120 280 L 120 310 A 15 15 0 0 0 150 310 L 150 280 Z" />
+    <path d="M 250 280 L 250 310 A 15 15 0 0 0 280 310 L 280 280 Z" />
+    <!-- Windshield -->
+    <rect x="135" y="120" width="130" height="60" rx="10" fill="#D81B60" opacity="0.1" />
+    <!-- Headlights -->
+    <circle cx="150" cy="230" r="15" fill="#D81B60" />
+    <circle cx="250" cy="230" r="15" fill="#D81B60" />
+  </g>
+
+  <!-- Text TRUFI -->
+  <text x="200" y="165" font-family="'Inter', sans-serif" font-weight="900" font-size="46" fill="#D81B60" text-anchor="middle" transform="rotate(-5, 200, 160)">TRUFI</text>
+  
+  <!-- The "2" Badge -->
+  <g transform="translate(260, 60)">
+    <circle cx="0" cy="0" r="35" fill="#0f172a" stroke="#ffffff" stroke-width="6" />
+    <text x="0" y="15" font-family="'Inter', sans-serif" font-weight="900" font-size="42" fill="#ffffff" text-anchor="middle">2</text>
+  </g>
+</svg>
