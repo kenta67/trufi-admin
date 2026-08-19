@@ -13,7 +13,7 @@ import { AuthService } from '../../core/services/auth.service';
       <!-- Stat Cards -->
       <div class="stats-grid">
         <div class="stat-card" style="--accent: #3b82f6">
-          <div class="stat-icon">👥</div>
+          <div class="stat-icon"><i class='bx bx-group'></i> </div>
           <div class="stat-info">
             <span class="stat-value">{{ stats?.users?.total || 0 }}</span>
             <span class="stat-label">Usuarios Totales</span>
@@ -22,7 +22,7 @@ import { AuthService } from '../../core/services/auth.service';
         </div>
 
         <div class="stat-card" style="--accent: #f59e0b">
-          <div class="stat-icon">📋</div>
+          <div class="stat-icon"><i class='bx bx-clipboard'></i> </div>
           <div class="stat-info">
             <span class="stat-value">{{ stats?.reports?.pendientes || 0 }}</span>
             <span class="stat-label">Reportes Pendientes</span>
@@ -31,7 +31,7 @@ import { AuthService } from '../../core/services/auth.service';
         </div>
 
         <div class="stat-card" style="--accent: #10b981">
-          <div class="stat-icon">✅</div>
+          <div class="stat-icon"><i class='bx bx-check-circle'></i> </div>
           <div class="stat-info">
             <span class="stat-value">{{ stats?.reports?.resueltos || 0 }}</span>
             <span class="stat-label">Resueltos</span>
@@ -40,9 +40,9 @@ import { AuthService } from '../../core/services/auth.service';
         </div>
 
         <div class="stat-card" style="--accent: #8b5cf6">
-          <div class="stat-icon">🗺️</div>
+          <div class="stat-icon"><i class='bx bx-map-alt'></i> </div>
           <div class="stat-info">
-            <span class="stat-value">{{ stats?.gtfsVersion ? '✓' : '✗' }}</span>
+            <span class="stat-value"><i class='bx' [ngClass]="stats?.gtfsVersion ? 'bx-check' : 'bx-x'"></i></span>
             <span class="stat-label">GTFS Activo</span>
           </div>
           <div class="stat-detail">{{ stats?.tariffCount || 0 }} tarifas</div>
@@ -53,7 +53,7 @@ import { AuthService } from '../../core/services/auth.service';
       <div class="section-grid">
         <div class="card">
           <div class="card-header">
-            <h3>📊 Reportes por Tipo</h3>
+            <h3><i class='bx bx-bar-chart-alt-2'></i>  Reportes por Tipo</h3>
           </div>
           <div class="card-body">
             <div class="type-list">
@@ -72,7 +72,7 @@ import { AuthService } from '../../core/services/auth.service';
 
         <div class="card">
           <div class="card-header">
-            <h3>⚡ Estado de Solicitudes</h3>
+            <h3><i class='bx bx-bolt-circle'></i>  Estado de Solicitudes</h3>
           </div>
           <div class="card-body">
             <div class="status-grid">
@@ -104,7 +104,7 @@ import { AuthService } from '../../core/services/auth.service';
       <!-- Recent Reports -->
       <div class="card">
         <div class="card-header">
-          <h3>📝 Reportes Recientes</h3>
+          <h3><i class='bx bx-edit'></i>  Reportes Recientes</h3>
           <a routerLink="/reports" class="view-all">Ver todos →</a>
         </div>
         <div class="card-body">
@@ -122,7 +122,7 @@ import { AuthService } from '../../core/services/auth.service';
               <tbody>
                 <tr *ngFor="let report of recentReports">
                   <td>
-                    <span class="type-tag">{{ getTypeIcon(report.type) }} {{ getTypeLabel(report.type) }}</span>
+                    <span class="type-tag"><i class='bx' [ngClass]="getTypeIcon(report.type)"></i> {{ getTypeLabel(report.type) }}</span>
                   </td>
                   <td class="desc-cell">{{ report.description | slice:0:60 }}{{ report.description.length > 60 ? '...' : '' }}</td>
                   <td>{{ report.client?.full_name || 'Anónimo' }}</td>
@@ -137,7 +137,7 @@ import { AuthService } from '../../core/services/auth.service';
             </table>
           </div>
           <div class="empty-state" *ngIf="recentReports.length === 0 && !loading">
-            <p>📭 No hay reportes aún</p>
+            <p><i class='bx bx-inbox'></i>  No hay reportes aún</p>
           </div>
         </div>
       </div>
@@ -145,7 +145,7 @@ import { AuthService } from '../../core/services/auth.service';
       <!-- Recent Users -->
       <div class="card" *ngIf="auth.isAdmin">
         <div class="card-header">
-          <h3>👥 Últimos Usuarios Registrados</h3>
+          <h3><i class='bx bx-group'></i>  Últimos Usuarios Registrados</h3>
           <a routerLink="/users" class="view-all">Ver todos →</a>
         </div>
         <div class="card-body">
@@ -160,7 +160,7 @@ import { AuthService } from '../../core/services/auth.service';
             </div>
           </div>
           <div class="empty-state" *ngIf="recentUsers.length === 0 && !loading">
-            <p>👤 No hay usuarios registrados</p>
+            <p><i class='bx bx-user'></i>  No hay usuarios registrados</p>
           </div>
         </div>
       </div>
@@ -517,8 +517,8 @@ export class DashboardComponent implements OnInit {
   }
 
   getTypeIcon(type: string): string {
-    const icons: any = { calle_cerrada: '🚧', bache: '🕳️', cambio_ruta: '🔄', actividad_civica: '🎉', otro: '📌' };
-    return icons[type] || '📌';
+    const icons: any = { calle_cerrada: 'bx-traffic-cone', bache: 'bx-radio-circle', cambio_ruta: 'bx-refresh', actividad_civica: 'bx-party', otro: 'bx-pin' };
+    return icons[type] || 'bx-pin';
   }
 
   getTypeLabel(type: string): string {

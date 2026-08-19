@@ -13,7 +13,7 @@ import { AuthService } from '../../core/services/auth.service';
       <div class="page-actions">
         <div class="filters-bar">
           <div class="search-wrapper">
-            <span>🔍</span>
+            <span><i class='bx bx-search'></i> </span>
             <input type="text" placeholder="Buscar usuario..." [(ngModel)]="searchTerm" (input)="onSearch()" />
           </div>
           <select [(ngModel)]="filterRole" (change)="loadUsers()">
@@ -50,21 +50,27 @@ import { AuthService } from '../../core/services/auth.service';
                 </td>
                 <td>{{ u.email }}</td>
                 <td>
-                  <select [ngModel]="u.role" (ngModelChange)="changeRole(u, $event)" class="role-select" [class]="'role-' + u.role">
-                    <option value="cliente">Cliente</option>
+                  <select *ngIf="u.role !== 'cliente'" [ngModel]="u.role" (ngModelChange)="changeRole(u, $event)" class="role-select" [class]="'role-' + u.role">
                     <option value="operador">Operador</option>
                     <option value="tecnico">Técnico</option>
                     <option value="administrador">Administrador</option>
                   </select>
+                  <span *ngIf="u.role === 'cliente'" class="role-select role-cliente" style="display:inline-block">Cliente</span>
                 </td>
                 <td>
-                  <button class="status-toggle" [class.active]="u.is_active" (click)="toggleActive(u)">
-                    {{ u.is_active ? '✅ Activo' : '⛔ Inactivo' }}
+                  <button *ngIf="u.role !== 'cliente'" class="status-toggle" [class.active]="u.is_active" (click)="toggleActive(u)">
+                    <i class='bx' [ngClass]="u.is_active ? 'bx-check-circle' : 'bx-block'"></i> {{ u.is_active ? 'Activo' : 'Inactivo' }}
                   </button>
+                  <span *ngIf="u.role === 'cliente'" class="status-toggle" [class.active]="u.is_active" style="display:inline-block; cursor:default">
+                    <i class='bx' [ngClass]="u.is_active ? 'bx-check-circle' : 'bx-block'"></i> {{ u.is_active ? 'Activo' : 'Inactivo' }}
+                  </span>
                 </td>
                 <td>{{ u.created_at | date:'dd/MM/yy' }}</td>
                 <td>
-                  <button class="btn-sm btn-delete" (click)="deleteUser(u)">🗑️</button>
+                  <div class="actions-cell" *ngIf="u.role !== 'cliente'">
+                    <button class="btn-sm btn-edit" (click)="openEditModal(u)"><i class='bx bx-edit-alt'></i> </button>
+                    <button class="btn-sm btn-delete" (click)="deleteUser(u)"><i class='bx bx-trash'></i> </button>
+                  </div>
                 </td>
               </tr>
             </tbody>
@@ -82,8 +88,8 @@ import { AuthService } from '../../core/services/auth.service';
       <div class="modal-overlay" *ngIf="showCreateModal" (click)="showCreateModal = false">
         <div class="modal" (click)="$event.stopPropagation()">
           <div class="modal-header">
-            <h3>👤 Nuevo Usuario Administrativo</h3>
-            <button class="modal-close" (click)="showCreateModal = false">✕</button>
+            <h3><i class='bx bx-user'></i>  Nuevo Usuario Administrativo</h3>
+            <button class="modal-close" (click)="showCreateModal = false"><i class='bx bx-x'></i> </button>
           </div>
           <div class="modal-body">
             <form (ngSubmit)="createUser()">
@@ -107,9 +113,43 @@ import { AuthService } from '../../core/services/auth.service';
                   <option value="administrador">Administrador</option>
                 </select>
               </div>
-              <div class="error-msg" *ngIf="createError">⚠️ {{ createError }}</div>
+              <div class="error-msg" *ngIf="createError"><i class='bx bx-error'></i>  {{ createError }}</div>
               <button type="submit" class="btn-submit" [disabled]="creating">
                 {{ creating ? 'Creando...' : 'Crear Usuario' }}
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Edit User Modal -->
+      <div class="modal-overlay" *ngIf="showEditModal" (click)="showEditModal = false">
+        <div class="modal" (click)="$event.stopPropagation()">
+          <div class="modal-header">
+            <h3><i class='bx bx-edit'></i>  Editar Usuario Administrativo</h3>
+            <button class="modal-close" (click)="showEditModal = false"><i class='bx bx-x'></i> </button>
+          </div>
+          <div class="modal-body">
+            <form (ngSubmit)="updateUser()">
+              <div class="form-group">
+                <label>Nombre Completo</label>
+                <input type="text" [(ngModel)]="editingUser.full_name" name="full_name" required />
+              </div>
+              <div class="form-group">
+                <label>Rol</label>
+                <select [(ngModel)]="editingUser.role" name="role" required>
+                  <option value="operador">Operador</option>
+                  <option value="tecnico">Técnico</option>
+                  <option value="administrador">Administrador</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Nueva Contraseña (Opcional)</label>
+                <input type="password" [(ngModel)]="editingUser.password" name="password" placeholder="Dejar en blanco para no cambiar" />
+              </div>
+              <div class="error-msg" *ngIf="editError"><i class='bx bx-error'></i>  {{ editError }}</div>
+              <button type="submit" class="btn-submit" [disabled]="updating">
+                {{ updating ? 'Guardando...' : 'Guardar Cambios' }}
               </button>
             </form>
           </div>
@@ -254,7 +294,9 @@ import { AuthService } from '../../core/services/auth.service';
       transition: all 0.2s;
     }
 
-    .btn-delete { background: rgba(239,68,68,0.15); }
+    .actions-cell { display: flex; gap: 0.5rem; }
+    .btn-edit { background: rgba(59,130,246,0.15); color: #93c5fd; }
+    .btn-delete { background: rgba(239,68,68,0.15); color: #fca5a5; }
     .btn-sm:hover { transform: scale(1.1); }
 
     .pagination {
@@ -338,6 +380,12 @@ export class UsersComponent implements OnInit {
   newUser = { email: '', password: '', full_name: '', role: 'operador' };
   creating = false;
   createError = '';
+
+  showEditModal = false;
+  editingUser: any = { id: '', full_name: '', role: '', password: '' };
+  updating = false;
+  editError = '';
+  
   private searchTimeout: any;
 
   constructor(private api: ApiService, public auth: AuthService) {}
@@ -385,17 +433,52 @@ export class UsersComponent implements OnInit {
   }
 
   changeRole(user: any, newRole: string): void {
+    if (user.role === 'cliente') return;
     this.api.updateUserRole(user.id, newRole).subscribe(() => this.loadUsers());
   }
 
   toggleActive(user: any): void {
+    if (user.role === 'cliente') return;
     this.api.toggleUserActive(user.id).subscribe(() => this.loadUsers());
   }
 
   deleteUser(user: any): void {
+    if (user.role === 'cliente') return;
     if (confirm(`¿Eliminar al usuario ${user.full_name || user.email}?`)) {
       this.api.deleteUser(user.id).subscribe(() => this.loadUsers());
     }
+  }
+
+  openEditModal(u: any): void {
+    if (u.role === 'cliente') return;
+    this.editError = '';
+    this.editingUser = { id: u.id, full_name: u.full_name, role: u.role, password: '' };
+    this.showEditModal = true;
+  }
+
+  updateUser(): void {
+    this.updating = true;
+    this.editError = '';
+    
+    const data: any = {
+      full_name: this.editingUser.full_name,
+      role: this.editingUser.role
+    };
+    if (this.editingUser.password) {
+      data.password = this.editingUser.password;
+    }
+
+    this.api.updateUser(this.editingUser.id, data).subscribe({
+      next: () => {
+        this.showEditModal = false;
+        this.updating = false;
+        this.loadUsers();
+      },
+      error: (err) => {
+        this.editError = err.error?.error || 'Error actualizando usuario';
+        this.updating = false;
+      }
+    });
   }
 
   getInitials(name: string): string {

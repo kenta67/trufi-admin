@@ -11,7 +11,7 @@ import { AuthService } from '../../core/services/auth.service';
   template: `
     <div class="tariffs-page">
       <div class="page-actions">
-        <h3>💰 Tarifas del Transporte Público</h3>
+        <h3><i class='bx bx-dollar-circle'></i>  Tarifas del Transporte Público</h3>
         <button class="btn-create" *ngIf="auth.hasRole('administrador','tecnico')" (click)="showModal = true; resetForm()">
           + Nueva Tarifa
         </button>
@@ -28,23 +28,23 @@ import { AuthService } from '../../core/services/auth.service';
           <div class="tariff-footer">
             <span class="tariff-updated">{{ t.updated_at | date:'dd/MM/yy' }}</span>
             <div class="tariff-actions" *ngIf="auth.hasRole('administrador','tecnico')">
-              <button class="btn-sm" (click)="editTariff(t)">✏️</button>
-              <button class="btn-sm btn-delete" *ngIf="auth.isAdmin" (click)="deleteTariff(t)">🗑️</button>
+              <button class="btn-sm" (click)="editTariff(t)"><i class='bx bx-edit'></i> </button>
+              <button class="btn-sm btn-delete" *ngIf="auth.isAdmin" (click)="deleteTariff(t)"><i class='bx bx-trash'></i> </button>
             </div>
           </div>
         </div>
       </div>
 
       <div class="empty-state" *ngIf="tariffs.length === 0 && !loading">
-        <p>💰 No hay tarifas registradas</p>
+        <p><i class='bx bx-dollar-circle'></i>  No hay tarifas registradas</p>
       </div>
 
       <!-- Modal -->
       <div class="modal-overlay" *ngIf="showModal" (click)="showModal = false">
         <div class="modal" (click)="$event.stopPropagation()">
           <div class="modal-header">
-            <h3>{{ editingId ? '✏️ Editar Tarifa' : '💰 Nueva Tarifa' }}</h3>
-            <button class="modal-close" (click)="showModal = false">✕</button>
+            <h3><i class='bx' [ngClass]="editingId ? 'bx-edit' : 'bx-dollar-circle'"></i> {{ editingId ? 'Editar Tarifa' : 'Nueva Tarifa' }}</h3>
+            <button class="modal-close" (click)="showModal = false"><i class='bx bx-x'></i> </button>
           </div>
           <div class="modal-body">
             <form (ngSubmit)="saveTariff()">

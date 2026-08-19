@@ -10,7 +10,7 @@ import { ApiService } from '../../core/services/api.service';
     <div class="settings-page">
       <div class="card">
         <div class="card-header">
-          <h3>⚙️ Configuraciones del Sistema</h3>
+          <h3><i class='bx bx-cog'></i>  Configuraciones del Sistema</h3>
         </div>
         <div class="card-body">
           <div class="settings-grid">

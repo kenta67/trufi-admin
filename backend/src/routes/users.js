@@ -127,10 +127,16 @@ router.post('/', requireRole('administrador'), async (req, res) => {
 router.patch('/:id/role', requireRole('administrador'), async (req, res) => {
   try {
     const { role } = req.body;
-    const validRoles = ['cliente', 'operador', 'tecnico', 'administrador'];
+    const validRoles = ['operador', 'tecnico', 'administrador'];
     
     if (!validRoles.includes(role)) {
       return res.status(400).json({ error: 'Rol no válido' });
+    }
+
+    // Verificar si es cliente
+    const { data: profile } = await supabaseAdmin.from('profiles').select('role').eq('id', req.params.id).single();
+    if (profile && profile.role === 'cliente') {
+      return res.status(403).json({ error: 'No se pueden editar clientes' });
     }
 
     const { data, error } = await supabaseAdmin
@@ -154,12 +160,16 @@ router.patch('/:id/role', requireRole('administrador'), async (req, res) => {
  */
 router.patch('/:id/toggle-active', requireRole('administrador'), async (req, res) => {
   try {
-    // Obtener estado actual
+    // Obtener estado actual y rol
     const { data: profile } = await supabaseAdmin
       .from('profiles')
-      .select('is_active')
+      .select('is_active, role')
       .eq('id', req.params.id)
       .single();
+
+    if (profile && profile.role === 'cliente') {
+      return res.status(403).json({ error: 'No se pueden editar clientes' });
+    }
 
     const { data, error } = await supabaseAdmin
       .from('profiles')
@@ -187,6 +197,12 @@ router.delete('/:id', requireRole('administrador'), async (req, res) => {
       return res.status(400).json({ error: 'No puedes eliminarte a ti mismo' });
     }
 
+    // Verificar si es cliente
+    const { data: profile } = await supabaseAdmin.from('profiles').select('role').eq('id', req.params.id).single();
+    if (profile && profile.role === 'cliente') {
+      return res.status(403).json({ error: 'No se pueden eliminar clientes' });
+    }
+
     const { error } = await supabaseAdmin.auth.admin.deleteUser(req.params.id);
     if (error) throw error;
 
@@ -194,6 +210,48 @@ router.delete('/:id', requireRole('administrador'), async (req, res) => {
   } catch (error) {
     console.error('Error eliminando usuario:', error);
     res.status(500).json({ error: 'Error eliminando usuario' });
+  }
+});
+
+/**
+ * PUT /api/users/:id
+ * Actualizar datos de un usuario administrativo
+ */
+router.put('/:id', requireRole('administrador'), async (req, res) => {
+  try {
+    const { full_name, role, password } = req.body;
+
+    const { data: profile } = await supabaseAdmin.from('profiles').select('role').eq('id', req.params.id).single();
+    if (profile && profile.role === 'cliente') {
+      return res.status(403).json({ error: 'No se pueden editar usuarios clientes' });
+    }
+
+    // Actualizar contraseña si se proporciona
+    if (password) {
+      const { error: pwdError } = await supabaseAdmin.auth.admin.updateUserById(req.params.id, { password });
+      if (pwdError) throw pwdError;
+    }
+
+    // Actualizar metadatos de auth
+    const authUpdate = {};
+    if (full_name) authUpdate.full_name = full_name;
+    if (role) authUpdate.role = role;
+    if (Object.keys(authUpdate).length > 0) {
+      await supabaseAdmin.auth.admin.updateUserById(req.params.id, { user_metadata: authUpdate });
+    }
+
+    // Actualizar perfil público
+    const profileUpdate = {};
+    if (full_name) profileUpdate.full_name = full_name;
+    if (role) profileUpdate.role = role;
+    if (Object.keys(profileUpdate).length > 0) {
+      await supabaseAdmin.from('profiles').update(profileUpdate).eq('id', req.params.id);
+    }
+
+    res.json({ message: 'Usuario actualizado correctamente' });
+  } catch (error) {
+    console.error('Error actualizando usuario:', error);
+    res.status(500).json({ error: 'Error actualizando usuario' });
   }
 });
 

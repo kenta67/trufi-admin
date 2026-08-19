@@ -84,6 +84,10 @@ export class ApiService {
     return this.http.patch(`${this.apiUrl}/users/${id}/role`, { role });
   }
 
+  updateUser(id: string, data: any): Observable<any> {
+    return this.http.put(`${this.apiUrl}/users/${id}`, data);
+  }
+
   toggleUserActive(id: string): Observable<any> {
     return this.http.patch(`${this.apiUrl}/users/${id}/toggle-active`, {});
   }
@@ -140,6 +144,10 @@ export class ApiService {
 
   deleteClosure(id: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/map/closures/${id}`);
+  }
+
+  planTrip(origin: {lat: number, lng: number}, destination: {lat: number, lng: number}): Observable<any> {
+    return this.http.post(`${this.apiUrl}/map/plan-trip`, { origin, destination });
   }
 
   // ─── Settings ───

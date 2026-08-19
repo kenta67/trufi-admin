@@ -34,6 +34,10 @@ export const routes: Routes = [
         canActivate: [roleGuard('administrador', 'tecnico')]
       },
       {
+        path: 'mapas',
+        loadComponent: () => import('./pages/mapas/mapas.component').then(m => m.MapasComponent)
+      },
+      {
         path: 'settings',
         loadComponent: () => import('./pages/settings/settings.component').then(m => m.SettingsComponent),
         canActivate: [roleGuard('administrador')]

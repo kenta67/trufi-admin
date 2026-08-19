@@ -13,7 +13,7 @@ import { AuthService } from '../../core/services/auth.service';
       <!-- Filters -->
       <div class="filters-bar">
         <div class="search-wrapper">
-          <span>🔍</span>
+          <span><i class='bx bx-search'></i> </span>
           <input type="text" placeholder="Buscar por descripción..." [(ngModel)]="searchTerm" (input)="onSearch()" />
         </div>
         <select [(ngModel)]="filterStatus" (change)="loadReports()">
@@ -50,7 +50,7 @@ import { AuthService } from '../../core/services/auth.service';
             </thead>
             <tbody>
               <tr *ngFor="let r of reports">
-                <td><span class="type-tag">{{ getTypeIcon(r.type) }} {{ getTypeLabel(r.type) }}</span></td>
+                <td><span class="type-tag"><i class='bx' [ngClass]="getTypeIcon(r.type)"></i> {{ getTypeLabel(r.type) }}</span></td>
                 <td class="desc-cell">{{ r.description | slice:0:80 }}</td>
                 <td>{{ r.client?.full_name || 'Anónimo' }}</td>
                 <td>
@@ -59,11 +59,11 @@ import { AuthService } from '../../core/services/auth.service';
                 <td>{{ r.created_at | date:'dd/MM/yy HH:mm' }}</td>
                 <td>
                   <div class="actions">
-                    <button class="btn-sm btn-view" (click)="selectReport(r)">👁️</button>
-                    <button class="btn-sm btn-approve" *ngIf="r.status === 'pendiente' && auth.hasRole('administrador','operador')" (click)="approve(r)">✅</button>
-                    <button class="btn-sm btn-reject" *ngIf="r.status === 'pendiente' && auth.hasRole('administrador','operador')" (click)="reject(r)">❌</button>
-                    <button class="btn-sm btn-resolve" *ngIf="r.status === 'en_resolucion' && auth.hasRole('administrador','tecnico')" (click)="resolve(r)">🔧</button>
-                    <button class="btn-sm btn-delete" *ngIf="auth.isAdmin" (click)="deleteReport(r)">🗑️</button>
+                    <button class="btn-sm btn-view" (click)="selectReport(r)"><i class='bx bx-show'></i> </button>
+                    <button class="btn-sm btn-approve" *ngIf="r.status === 'pendiente' && auth.hasRole('administrador','operador')" (click)="approve(r)"><i class='bx bx-check-circle'></i> </button>
+                    <button class="btn-sm btn-reject" *ngIf="r.status === 'pendiente' && auth.hasRole('administrador','operador')" (click)="reject(r)"><i class='bx bx-x-circle'></i> </button>
+                    <button class="btn-sm btn-resolve" *ngIf="r.status === 'en_resolucion' && auth.hasRole('administrador','tecnico')" (click)="resolve(r)"><i class='bx bx-wrench'></i> </button>
+                    <button class="btn-sm btn-delete" *ngIf="auth.isAdmin" (click)="deleteReport(r)"><i class='bx bx-trash'></i> </button>
                   </div>
                 </td>
               </tr>
@@ -72,7 +72,7 @@ import { AuthService } from '../../core/services/auth.service';
         </div>
 
         <div class="empty-state" *ngIf="reports.length === 0 && !loading">
-          <p>📭 No se encontraron reportes</p>
+          <p><i class='bx bx-inbox'></i>  No se encontraron reportes</p>
         </div>
 
         <!-- Pagination -->
@@ -88,7 +88,7 @@ import { AuthService } from '../../core/services/auth.service';
         <div class="modal" (click)="$event.stopPropagation()">
           <div class="modal-header">
             <h3>{{ getTypeIcon(selectedReport.type) }} Detalle del Reporte</h3>
-            <button class="modal-close" (click)="selectedReport = null">✕</button>
+            <button class="modal-close" (click)="selectedReport = null"><i class='bx bx-x'></i> </button>
           </div>
           <div class="modal-body">
             <div class="detail-grid">
@@ -131,8 +131,8 @@ import { AuthService } from '../../core/services/auth.service';
               <h4>Acciones del Operador</h4>
               <textarea [(ngModel)]="actionNotes" placeholder="Notas del operador..." rows="3"></textarea>
               <div class="action-buttons">
-                <button class="btn btn-approve" (click)="approveWithTechnician()">✅ Aprobar y Asignar Técnico</button>
-                <button class="btn btn-reject" (click)="rejectWithNotes()">❌ Rechazar</button>
+                <button class="btn btn-approve" (click)="approveWithTechnician()"><i class='bx bx-check-circle'></i>  Aprobar y Asignar Técnico</button>
+                <button class="btn btn-reject" (click)="rejectWithNotes()"><i class='bx bx-x-circle'></i>  Rechazar</button>
               </div>
               <div *ngIf="showTechSelect">
                 <label>Seleccionar Técnico:</label>
@@ -506,8 +506,8 @@ export class ReportsComponent implements OnInit {
   }
 
   getTypeIcon(t: string): string {
-    const i: any = { calle_cerrada: '🚧', bache: '🕳️', cambio_ruta: '🔄', actividad_civica: '🎉', otro: '📌' };
-    return i[t] || '📌';
+    const i: any = { calle_cerrada: 'bx-traffic-cone', bache: 'bx-radio-circle', cambio_ruta: 'bx-refresh', actividad_civica: 'bx-party', otro: 'bx-pin' };
+    return i[t] || 'bx-pin';
   }
 
   getTypeLabel(t: string): string {
